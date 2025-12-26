@@ -1,0 +1,66 @@
+<div class="dashboard">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>🔧 GadgetCloud</h1>
+      <div class="user-info">
+        <span>{{ authService.currentUserValue?.email }}</span>
+        <button (click)="logout()" class="logout-btn">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="welcome-section">
+      <h2>Welcome back, {{ authService.currentUserValue?.name }}!</h2>
+      <p>Manage your devices and repairs</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📱</div>
+        <div class="stat-info">
+          <h3>{{ items.length }}</h3>
+          <p>Total Devices</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <h3>{{ (items | filter:'status':'active').length }}</h3>
+          <p>Active</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔧</div>
+        <div class="stat-info">
+          <h3>{{ (items | filter:'status':'in_repair').length }}</h3>
+          <p>In Repair</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Devices List -->
+    <div class="devices-section">
+      <h3>My Devices</h3>
+      <div class="devices-grid" *ngIf="!loading && items.length > 0">
+        <div class="device-card" *ngFor="let item of items">
+          <div class="device-icon">{{ getCategoryIcon(item.category) }}</div>
+          <div class="device-info">
+            <h4>{{ item.name }}</h4>
+            <p class="device-brand">{{ item.brand }}</p>
+            <span class="device-status" [style.background-color]="getStatusColor(item.status)">
+              {{ item.status | titlecase }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="loading" *ngIf="loading">Loading devices...</div>
+      <div class="empty-state" *ngIf="!loading && items.length === 0">
+        <p>No devices found. Add your first device!</p>
+      </div>
+    </div>
+  </main>
+</div>

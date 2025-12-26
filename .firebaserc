@@ -1,0 +1,19 @@
+{
+  "projects": {
+    "default": "gadgetcloud-prd",
+    "prd": "gadgetcloud-prd",
+    "stg": "gadgetcloud-stg"
+  },
+  "targets": {
+    "gadgetcloud-prd": {
+      "hosting": {
+        "app": ["gadgetcloud-app-prd"]
+      }
+    },
+    "gadgetcloud-stg": {
+      "hosting": {
+        "app": ["gadgetcloud-app-stg"]
+      }
+    }
+  }
+}

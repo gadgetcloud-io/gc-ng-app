@@ -1,0 +1,59 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo">
+      <h1>🔧 GadgetCloud</h1>
+      <p>Unified Device Management Platform</p>
+    </div>
+
+    <form (ngSubmit)="login()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="Enter your email"
+          required
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="role">Portal</label>
+        <select id="role" [(ngModel)]="selectedRole" name="role">
+          <option *ngFor="let role of [UserRole.CUSTOMER, UserRole.PARTNER, UserRole.SUPPORT, UserRole.ADMIN]" [value]="role">
+            {{ getRoleDisplayName(role) }}
+          </option>
+        </select>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="loading" class="login-button">
+        <span *ngIf="!loading">Sign In</span>
+        <span *ngIf="loading">Signing in...</span>
+      </button>
+    </form>
+
+    <div class="demo-notice">
+      <p><strong>MVP Demo Mode</strong></p>
+      <p>Enter any email/password to test the application.</p>
+    </div>
+  </div>
+</div>

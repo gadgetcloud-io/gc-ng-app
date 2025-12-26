@@ -1,9 +1,20 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
+  firstName: string;
+  lastName?: string;
   role: UserRole;
   createdAt?: string;
+}
+
+/**
+ * Get display name from user object
+ * @param user User object
+ * @returns Full name as "firstName lastName" or just firstName if no lastName
+ */
+export function getUserDisplayName(user: User | null): string {
+  if (!user) return '';
+  return user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName;
 }
 
 export enum UserRole {

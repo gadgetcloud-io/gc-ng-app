@@ -4,6 +4,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ApiService } from '../../../core/services/api.service';
 import { Item } from '../../../core/models/item.model';
 import { FilterPipe } from '../../../shared/pipes/filter.pipe';
+import { getUserDisplayName } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,10 @@ export class DashboardComponent implements OnInit {
     public authService: AuthService,
     private apiService: ApiService
   ) {}
+
+  get userDisplayName(): string {
+    return getUserDisplayName(this.authService.currentUserValue);
+  }
 
   ngOnInit(): void {
     this.loadItems();

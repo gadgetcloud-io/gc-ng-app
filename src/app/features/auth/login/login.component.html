@@ -54,7 +54,7 @@
       <h2>Create Account</h2>
 
       <div class="form-group">
-        <label for="signup-name">Full Name</label>
+        <label for="signup-name">Full Name <span class="required">*</span></label>
         <input
           type="text"
           id="signup-name"
@@ -65,8 +65,45 @@
         />
       </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label for="signup-firstname">First Name</label>
+          <input
+            type="text"
+            id="signup-firstname"
+            [(ngModel)]="signupFirstName"
+            name="signupFirstName"
+            placeholder="First name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="signup-lastname">Last Name</label>
+          <input
+            type="text"
+            id="signup-lastname"
+            [(ngModel)]="signupLastName"
+            name="signupLastName"
+            placeholder="Last name"
+          />
+        </div>
+      </div>
+
       <div class="form-group">
-        <label for="signup-email">Email</label>
+        <label for="signup-mobile">Mobile Number</label>
+        <input
+          type="tel"
+          id="signup-mobile"
+          [(ngModel)]="signupMobile"
+          name="signupMobile"
+          placeholder="10-digit Indian mobile (e.g., 9876543210)"
+          pattern="[0-9+\-\s\(\)]+"
+        />
+        <small class="field-hint">Optional. Enter 10-digit number or with +91 prefix</small>
+      </div>
+
+      <div class="form-group">
+        <label for="signup-email">Email <span class="required">*</span></label>
         <input
           type="email"
           id="signup-email"
@@ -79,7 +116,7 @@
       </div>
 
       <div class="form-group">
-        <label for="signup-password">Password</label>
+        <label for="signup-password">Password <span class="required">*</span></label>
         <input
           type="password"
           id="signup-password"

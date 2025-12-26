@@ -18,6 +18,9 @@ export class LoginComponent {
   loading = false;
   showSignup = false;
   signupName = '';
+  signupFirstName = '';
+  signupLastName = '';
+  signupMobile = '';
 
   constructor(
     private authService: AuthService,
@@ -50,12 +53,18 @@ export class LoginComponent {
 
   signup(): void {
     if (!this.email || !this.password || !this.signupName) {
-      this.errorMessage = 'Please fill in all fields';
+      this.errorMessage = 'Please fill in all required fields';
       return;
     }
 
     if (this.password.length < 8) {
       this.errorMessage = 'Password must be at least 8 characters long';
+      return;
+    }
+
+    // Validate mobile if provided
+    if (this.signupMobile && !this.isValidIndianMobile(this.signupMobile)) {
+      this.errorMessage = 'Please enter a valid Indian mobile number (10 digits starting with 6, 7, 8, or 9)';
       return;
     }
 
@@ -65,7 +74,10 @@ export class LoginComponent {
     this.authService.signup({
       email: this.email,
       password: this.password,
-      name: this.signupName
+      name: this.signupName,
+      firstName: this.signupFirstName,
+      lastName: this.signupLastName,
+      mobile: this.signupMobile
     }).subscribe({
       next: (response) => {
         this.loading = false;
@@ -78,6 +90,20 @@ export class LoginComponent {
         console.error('Signup error:', error);
       }
     });
+  }
+
+  private isValidIndianMobile(mobile: string): boolean {
+    // Remove spaces, dashes, parentheses, plus signs
+    const cleaned = mobile.replace(/[\s\-\(\)\+]/g, '');
+
+    // Check if it starts with 91 and has 12 digits total
+    if (cleaned.startsWith('91') && cleaned.length === 12) {
+      const number = cleaned.substring(2);
+      return /^[6-9]\d{9}$/.test(number);
+    }
+
+    // Check if it's 10 digits starting with 6-9
+    return /^[6-9]\d{9}$/.test(cleaned);
   }
 
   toggleSignup(): void {

@@ -50,6 +50,10 @@
       color: #2d3748;
       font-weight: 500;
       font-size: 14px;
+
+      .required {
+        color: #e53e3e;
+      }
     }
 
     input, select {
@@ -72,6 +76,21 @@
       cursor: pointer;
       background: white;
     }
+
+    .field-hint {
+      display: block;
+      margin-top: 6px;
+      color: #718096;
+      font-size: 12px;
+      font-style: italic;
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
   }
 
   .error-message {

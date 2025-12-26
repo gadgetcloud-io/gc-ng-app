@@ -22,6 +22,9 @@ export interface SignupRequest {
   email: string;
   password: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
+  mobile?: string;
 }
 
 export interface AuthResponse {

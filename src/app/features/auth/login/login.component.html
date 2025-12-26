@@ -53,27 +53,16 @@
     <form *ngIf="showSignup" (ngSubmit)="signup()" class="login-form">
       <h2>Create Account</h2>
 
-      <div class="form-group">
-        <label for="signup-name">Full Name <span class="required">*</span></label>
-        <input
-          type="text"
-          id="signup-name"
-          [(ngModel)]="signupName"
-          name="signupName"
-          placeholder="Enter your full name"
-          required
-        />
-      </div>
-
       <div class="form-row">
         <div class="form-group">
-          <label for="signup-firstname">First Name</label>
+          <label for="signup-firstname">First Name <span class="required">*</span></label>
           <input
             type="text"
             id="signup-firstname"
             [(ngModel)]="signupFirstName"
             name="signupFirstName"
             placeholder="First name"
+            required
           />
         </div>
 

@@ -17,7 +17,6 @@ export class LoginComponent {
   errorMessage = '';
   loading = false;
   showSignup = false;
-  signupName = '';
   signupFirstName = '';
   signupLastName = '';
   signupMobile = '';
@@ -52,7 +51,7 @@ export class LoginComponent {
   }
 
   signup(): void {
-    if (!this.email || !this.password || !this.signupName) {
+    if (!this.email || !this.password || !this.signupFirstName) {
       this.errorMessage = 'Please fill in all required fields';
       return;
     }
@@ -74,7 +73,6 @@ export class LoginComponent {
     this.authService.signup({
       email: this.email,
       password: this.password,
-      name: this.signupName,
       firstName: this.signupFirstName,
       lastName: this.signupLastName,
       mobile: this.signupMobile

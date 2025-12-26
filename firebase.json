@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "target": "app",
+    "site": "gadgetcloud-app-prd",
     "public": "dist/gc-ng-app/browser",
     "ignore": [
       "firebase.json",

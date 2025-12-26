@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { UserRole } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -15,10 +14,10 @@ import { UserRole } from '../../../core/models/user.model';
 export class LoginComponent {
   email = '';
   password = '';
-  selectedRole: UserRole = UserRole.CUSTOMER;
-  UserRole = UserRole;
   errorMessage = '';
   loading = false;
+  showSignup = false;
+  signupName = '';
 
   constructor(
     private authService: AuthService,
@@ -34,21 +33,55 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    // Using mock login for MVP
-    // In production, this would call authService.login() with real credentials
-    setTimeout(() => {
-      this.authService.mockLogin(this.email, this.selectedRole);
-      this.loading = false;
-    }, 500);
+    this.authService.login({ email: this.email, password: this.password })
+      .subscribe({
+        next: (response) => {
+          this.loading = false;
+          // Navigate based on user role
+          this.authService.navigateByRole(response.user.role);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.errorMessage = error.error?.detail || 'Login failed. Please check your credentials.';
+          console.error('Login error:', error);
+        }
+      });
   }
 
-  getRoleDisplayName(role: UserRole): string {
-    const names: Record<UserRole, string> = {
-      [UserRole.CUSTOMER]: 'Customer Portal',
-      [UserRole.PARTNER]: 'Partner Portal',
-      [UserRole.SUPPORT]: 'Support Portal',
-      [UserRole.ADMIN]: 'Admin Portal'
-    };
-    return names[role];
+  signup(): void {
+    if (!this.email || !this.password || !this.signupName) {
+      this.errorMessage = 'Please fill in all fields';
+      return;
+    }
+
+    if (this.password.length < 8) {
+      this.errorMessage = 'Password must be at least 8 characters long';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.authService.signup({
+      email: this.email,
+      password: this.password,
+      name: this.signupName
+    }).subscribe({
+      next: (response) => {
+        this.loading = false;
+        // Navigate to customer dashboard (default role)
+        this.authService.navigateByRole(response.user.role);
+      },
+      error: (error) => {
+        this.loading = false;
+        this.errorMessage = error.error?.detail || 'Signup failed. Please try again.';
+        console.error('Signup error:', error);
+      }
+    });
+  }
+
+  toggleSignup(): void {
+    this.showSignup = !this.showSignup;
+    this.errorMessage = '';
   }
 }

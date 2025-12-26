@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { User, UserRole, LoginRequest, AuthResponse } from '../models/user.model';
+import { User, UserRole, LoginRequest, SignupRequest, AuthResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -49,29 +49,34 @@ export class AuthService {
       );
   }
 
+  signup(signupData: SignupRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/signup`, signupData)
+      .pipe(
+        tap(response => {
+          if (response.access_token) {
+            localStorage.setItem('access_token', response.access_token);
+            localStorage.setItem('currentUser', JSON.stringify(response.user));
+            this.currentUserSubject.next(response.user);
+          }
+        })
+      );
+  }
+
   logout(): void {
+    const token = localStorage.getItem('access_token');
+
+    // Call backend logout endpoint for audit logging
+    if (token) {
+      this.http.post(`${this.apiUrl}/auth/logout`, {}).subscribe({
+        error: (err) => console.error('Logout error:', err)
+      });
+    }
+
+    // Clear local storage and navigate
     localStorage.removeItem('access_token');
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
-  }
-
-  // Mock login for MVP (since backend auth is not fully implemented)
-  mockLogin(email: string, role: UserRole = UserRole.CUSTOMER): void {
-    const mockUser: User = {
-      id: 'mock-user-' + Date.now(),
-      email,
-      name: email.split('@')[0],
-      role
-    };
-
-    const mockToken = 'mock-jwt-token-' + Date.now();
-    localStorage.setItem('access_token', mockToken);
-    localStorage.setItem('currentUser', JSON.stringify(mockUser));
-    this.currentUserSubject.next(mockUser);
-
-    // Navigate based on role
-    this.navigateByRole(role);
   }
 
   navigateByRole(role: UserRole): void {
@@ -86,5 +91,26 @@ export class AuthService {
 
   hasRole(roles: UserRole[]): boolean {
     return !!this.userRole && roles.includes(this.userRole);
+  }
+
+  getCurrentUserProfile(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/auth/me`);
+  }
+
+  updateProfile(updates: Partial<User>): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/auth/me`, updates)
+      .pipe(
+        tap(updatedUser => {
+          localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+          this.currentUserSubject.next(updatedUser);
+        })
+      );
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/change-password`, {
+      old_password: oldPassword,
+      new_password: newPassword
+    });
   }
 }

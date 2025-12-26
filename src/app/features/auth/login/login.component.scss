@@ -34,6 +34,13 @@
 }
 
 .login-form {
+  h2 {
+    font-size: 24px;
+    color: #1a202c;
+    margin: 0 0 24px 0;
+    text-align: center;
+  }
+
   .form-group {
     margin-bottom: 20px;
 
@@ -100,20 +107,46 @@
   }
 }
 
-.demo-notice {
+.toggle-form {
+  margin-top: 16px;
+  text-align: center;
+
+  p {
+    color: #718096;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .link-button {
+    background: none;
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.production-notice {
   margin-top: 24px;
   padding: 16px;
-  background: #edf2f7;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
   border-radius: 8px;
   text-align: center;
 
   p {
     margin: 4px 0;
     font-size: 13px;
-    color: #4a5568;
+    color: #166534;
 
     strong {
-      color: #2d3748;
+      color: #15803d;
     }
   }
 }

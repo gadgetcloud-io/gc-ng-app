@@ -18,6 +18,12 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface SignupRequest {
+  email: string;
+  password: string;
+  name: string;
+}
+
 export interface AuthResponse {
   access_token: string;
   token_type: string;

@@ -662,10 +662,14 @@
     display: none;
   }
 
+  // Make dropdowns full width on mobile for better UX
   .dropdown-menu {
-    left: 0;
-    right: 0;
-    max-width: calc(100vw - 1.5rem);
-    margin: 0 0.75rem;
+    position: fixed;
+    top: 4.5rem;
+    left: 1rem;
+    right: 1rem;
+    min-width: auto;
+    width: calc(100vw - 2rem);
+    max-width: calc(100vw - 2rem);
   }
 }

@@ -1,0 +1,361 @@
+<div class="holo-audit-page">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Main Container -->
+  <div class="audit-container">
+    <!-- Holographic Header -->
+    <header class="holo-header">
+      <div class="header-glow"></div>
+      <div class="header-content">
+        <h1 class="holo-title">Security Timeline</h1>
+        <p class="holo-subtitle">Audit Trail & Event Monitoring</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <div class="stat-glow"></div>
+          <div class="stat-value">{{ totalLogs }}</div>
+          <div class="stat-label">Total Events</div>
+          <div class="stat-pulse"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Holographic Filters Section -->
+    <section class="filters-section">
+      <div class="filters-grid">
+        <!-- User Search -->
+        <div class="filter-item search-item">
+          <label class="filter-label">Search User</label>
+          <div class="holo-search">
+            <div class="search-glow"></div>
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 16l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Email or name..."
+              [(ngModel)]="userSearch"
+              (input)="onFilterChange()"
+            />
+            <div class="input-scan"></div>
+          </div>
+        </div>
+
+        <!-- Event Type Filter -->
+        <div class="filter-item">
+          <label class="filter-label">Event Type</label>
+          <div class="holo-select">
+            <div class="select-glow"></div>
+            <select
+              class="select-input"
+              [(ngModel)]="selectedEventType"
+              (change)="onFilterChange()">
+              <option value="">All Events</option>
+              <option *ngFor="let type of eventTypes" [value]="type">
+                {{ getEventTypeDisplay(type) }}
+              </option>
+            </select>
+            <svg class="select-arrow" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Start Date -->
+        <div class="filter-item">
+          <label class="filter-label">Start Date</label>
+          <div class="holo-date">
+            <div class="date-glow"></div>
+            <svg class="date-icon" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input
+              type="date"
+              class="date-input"
+              [value]="startDate | date:'yyyy-MM-dd'"
+              (change)="onStartDateChange($event)"
+            />
+          </div>
+        </div>
+
+        <!-- End Date -->
+        <div class="filter-item">
+          <label class="filter-label">End Date</label>
+          <div class="holo-date">
+            <div class="date-glow"></div>
+            <svg class="date-icon" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input
+              type="date"
+              class="date-input"
+              [value]="endDate | date:'yyyy-MM-dd'"
+              (change)="onEndDateChange($event)"
+            />
+          </div>
+        </div>
+
+        <!-- Clear Filters -->
+        <div class="filter-item clear-item">
+          <button
+            class="neon-btn neon-btn-secondary"
+            (click)="clearFilters()"
+            type="button"
+            [disabled]="!userSearch && !selectedEventType && !startDate && !endDate">
+            <span class="btn-content">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Clear</span>
+            </span>
+            <div class="btn-glow"></div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="holo-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text">Scanning security timeline...</p>
+    </div>
+
+    <!-- Timeline Content -->
+    <div *ngIf="!loading" class="timeline-content">
+      <!-- Empty State -->
+      <div *ngIf="logs.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <div class="icon-glow"></div>
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="empty-title">No Events Found</h3>
+        <p class="empty-description">
+          {{ userSearch || selectedEventType || startDate || endDate
+             ? 'No events match your search criteria'
+             : 'Security timeline is empty' }}
+        </p>
+        <button
+          *ngIf="userSearch || selectedEventType || startDate || endDate"
+          class="neon-btn neon-btn-primary"
+          (click)="clearFilters()">
+          <span class="btn-content">Clear Filters</span>
+          <div class="btn-glow"></div>
+        </button>
+      </div>
+
+      <!-- Holographic Timeline View -->
+      <div *ngIf="logs.length > 0" class="timeline-container">
+        <div class="timeline-line">
+          <div class="line-glow"></div>
+        </div>
+
+        <div
+          *ngFor="let log of logs; let i = index"
+          class="timeline-item"
+          [attr.data-severity]="getEventSeverity(log.eventType)"
+          [style.animation-delay.ms]="i * 50"
+          (click)="openLogDetail(log)">
+
+          <!-- Holographic Timeline Dot -->
+          <div class="timeline-dot" [attr.data-severity]="getEventSeverity(log.eventType)">
+            <div class="dot-ring"></div>
+            <div class="dot-pulse"></div>
+            <div class="dot-icon">
+              <!-- Icons for different event types -->
+              <svg *ngIf="getEventIcon(log.eventType) === 'swap_horiz'" viewBox="0 0 24 24" fill="none">
+                <path d="M7 10l-5 5 5 5M17 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 15h12M22 9H10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'block'" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M4.93 4.93l14.14 14.14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'check_circle'" viewBox="0 0 24 24" fill="none">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'login'" viewBox="0 0 24 24" fill="none">
+                <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'error'" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'shield'" viewBox="0 0 24 24" fill="none">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'add_circle'" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'edit'" viewBox="0 0 24 24" fill="none">
+                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'delete'" viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <svg *ngIf="getEventIcon(log.eventType) === 'history'" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Holographic Event Card -->
+          <div class="event-card" [attr.data-severity]="getEventSeverity(log.eventType)">
+            <div class="card-glow"></div>
+            <div class="card-scan-line"></div>
+
+            <!-- Event Header -->
+            <div class="event-header">
+              <div class="event-type-badge" [attr.data-severity]="getEventSeverity(log.eventType)">
+                <span class="badge-glow"></span>
+                {{ getEventTypeDisplay(log.eventType) }}
+              </div>
+              <div class="event-timestamp">
+                <span class="timestamp-date">{{ formatTimestamp(log.timestamp).date }}</span>
+                <span class="timestamp-time">{{ formatTimestamp(log.timestamp).time }}</span>
+              </div>
+            </div>
+
+            <!-- Event Details -->
+            <div class="event-details">
+              <div class="detail-row">
+                <span class="detail-label">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Actor:
+                </span>
+                <span class="detail-value">{{ log.actorEmail }}</span>
+              </div>
+              <div class="detail-row" *ngIf="log.targetEmail">
+                <span class="detail-label">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                    <path d="M3 12h1m16 0h1M12 3v1m0 16v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  Target:
+                </span>
+                <span class="detail-value">{{ log.targetEmail }}</span>
+              </div>
+              <div class="detail-row" *ngIf="getActionSummary(log) !== 'No details'">
+                <span class="detail-label">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Changes:
+                </span>
+                <span class="detail-value summary-text">{{ getActionSummary(log) }}</span>
+              </div>
+            </div>
+
+            <!-- View Details Arrow -->
+            <div class="event-action">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Holographic Pagination -->
+      <div *ngIf="logs.length > 0" class="pagination-section">
+        <div class="pagination-glow"></div>
+
+        <div class="pagination-info">
+          <span class="info-label">Showing</span>
+          <span class="info-value">{{ paginator?.pageIndex * paginator?.pageSize + 1 }}</span>
+          <span class="info-label">to</span>
+          <span class="info-value">{{ Math.min((paginator?.pageIndex + 1) * paginator?.pageSize, totalLogs) }}</span>
+          <span class="info-label">of</span>
+          <span class="info-value">{{ totalLogs }}</span>
+          <span class="info-label">events</span>
+        </div>
+
+        <div class="pagination-controls">
+          <button
+            class="pagination-btn"
+            [disabled]="!paginator || paginator.pageIndex === 0"
+            (click)="paginator.previousPage(); onPageChange()"
+            type="button"
+            aria-label="Previous page">
+            <div class="btn-bg"></div>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="page-indicator">
+            <div class="page-glow"></div>
+            <span class="page-number">{{ (paginator?.pageIndex || 0) + 1 }}</span>
+          </div>
+
+          <button
+            class="pagination-btn"
+            [disabled]="!paginator || (paginator.pageIndex + 1) * paginator.pageSize >= totalLogs"
+            (click)="paginator.nextPage(); onPageChange()"
+            type="button"
+            aria-label="Next page">
+            <div class="btn-bg"></div>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="page-size-selector">
+          <label class="selector-label">Per page:</label>
+          <div class="holo-select holo-select-sm">
+            <div class="select-glow"></div>
+            <select
+              class="select-input"
+              [value]="paginator?.pageSize || 50"
+              (change)="paginator.pageSize = +$any($event.target).value; paginator.pageIndex = 0; onPageChange()">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <svg class="select-arrow" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Holographic Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

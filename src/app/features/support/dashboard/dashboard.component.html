@@ -1,0 +1,365 @@
+<div class="holo-support-dashboard-page">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Support Container -->
+  <div class="dashboard-container">
+    <!-- Holographic Header -->
+    <header class="holo-header">
+      <div class="header-glow"></div>
+      <div class="header-content">
+        <div class="header-left">
+          <h1 class="holo-title">Support Command</h1>
+          <p class="holo-subtitle">{{ userDisplayName }} <span class="divider">|</span> Support Dashboard</p>
+        </div>
+        <button class="neon-logout-btn" (click)="logout()" type="button">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Logout</span>
+          <div class="button-glow"></div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="holo-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text">Initializing support systems...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!loading" class="dashboard-content">
+      <!-- Holographic Metrics Grid -->
+      <section class="metrics-section">
+        <div class="metrics-grid">
+          <!-- Open Tickets -->
+          <div class="holo-metric-card" data-type="open">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        stroke="url(#gradient-open)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <circle cx="12" cy="14" r="2" fill="url(#gradient-open)"/>
+                  <defs>
+                    <linearGradient id="gradient-open">
+                      <stop offset="0%" stop-color="#ef4444"/>
+                      <stop offset="100%" stop-color="#f59e0b"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">OPEN TICKETS</div>
+                <div class="metric-value">{{ metrics.openTickets }}</div>
+                <div class="metric-status">
+                  <span class="pulse-dot"></span>
+                  <span>Requiring response</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Pending Tickets -->
+          <div class="holo-metric-card" data-type="pending">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="url(#gradient-pending)" stroke-width="2"/>
+                  <path d="M12 6v6l4 2" stroke="url(#gradient-pending)" stroke-width="2" stroke-linecap="round"/>
+                  <defs>
+                    <linearGradient id="gradient-pending">
+                      <stop offset="0%" stop-color="#f59e0b"/>
+                      <stop offset="100%" stop-color="#fbbf24"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">PENDING</div>
+                <div class="metric-value">{{ metrics.pendingTickets }}</div>
+                <div class="metric-status">
+                  <span>Awaiting customer</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Resolved Today -->
+          <div class="holo-metric-card" data-type="resolved">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3"
+                        stroke="url(#gradient-resolved)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-resolved">
+                      <stop offset="0%" stop-color="#10b981"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">RESOLVED TODAY</div>
+                <div class="metric-value">{{ metrics.resolvedToday }}</div>
+                <div class="metric-status">
+                  <span>Great job!</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Avg Response Time -->
+          <div class="holo-metric-card" data-type="time">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+                        stroke="url(#gradient-time)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-time">
+                      <stop offset="0%" stop-color="#3b82f6"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">AVG RESPONSE</div>
+                <div class="metric-value">{{ metrics.avgResponseTime }}</div>
+                <div class="metric-status">
+                  <span>Below target ✓</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Grid -->
+      <div class="main-content">
+        <!-- Ticket Queue Section -->
+        <section class="queue-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="title-text">Ticket Queue</span>
+              <div class="title-line"></div>
+            </h2>
+            <div class="ticket-count">
+              <span class="badge-value">{{ ticketQueue.length }}</span>
+              <span class="badge-label">active</span>
+            </div>
+          </div>
+
+          <div class="tickets-list">
+            <div
+              *ngFor="let ticket of ticketQueue; let i = index"
+              class="ticket-card"
+              (click)="viewTicketDetails(ticket)"
+              [attr.data-priority]="ticket.priority"
+              [attr.data-status]="ticket.status"
+              [style.animation-delay.ms]="i * 50">
+
+              <!-- Priority Neon Edge -->
+              <div class="priority-edge" [attr.data-priority]="ticket.priority"></div>
+
+              <!-- Card Glow -->
+              <div class="card-glow"></div>
+
+              <!-- Ticket Content -->
+              <div class="ticket-content">
+                <!-- Ticket Header -->
+                <div class="ticket-header">
+                  <div class="ticket-id">{{ ticket.id }}</div>
+                  <div class="ticket-age">{{ getTicketAge(ticket.createdAt) }}</div>
+                </div>
+
+                <!-- Ticket Subject -->
+                <h3 class="ticket-subject">{{ ticket.subject }}</h3>
+
+                <!-- Ticket Info -->
+                <div class="ticket-info">
+                  <div class="customer-name">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>{{ ticket.customer }}</span>
+                  </div>
+                  <div class="ticket-category">{{ ticket.category }}</div>
+                </div>
+
+                <!-- Ticket Footer -->
+                <div class="ticket-footer">
+                  <div class="status-badge" [attr.data-status]="ticket.status">
+                    <span class="status-dot"></span>
+                    {{ ticket.status | titlecase }}
+                  </div>
+                </div>
+
+                <!-- Assigned To -->
+                <div class="assigned-to" *ngIf="ticket.assignedTo">
+                  <strong>Assigned to: {{ ticket.assignedTo }}</strong>
+                </div>
+              </div>
+
+              <!-- Scan Line -->
+              <div class="card-scan-line"></div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="ticketQueue.length === 0" class="empty-state">
+              <div class="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3 class="empty-title">All Caught Up!</h3>
+              <p class="empty-description">No active tickets in your queue. Great work!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <!-- Quick Actions -->
+          <section class="quick-actions-section">
+            <h3 class="section-title">
+              <span class="title-text">Quick Actions</span>
+              <div class="title-line"></div>
+            </h3>
+            <div class="quick-actions-list">
+              <button class="action-button" (click)="newTicket()" type="button">
+                <div class="action-glow"></div>
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>New Ticket</span>
+              </button>
+              <button class="action-button" (click)="knowledgeBase()" type="button">
+                <div class="action-glow"></div>
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 006.5 22H20M4 19.5v-15A2.5 2.5 0 016.5 2H20v20H6.5z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Knowledge Base</span>
+              </button>
+              <button class="action-button" (click)="escalateTicket()" type="button">
+                <div class="action-glow"></div>
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Escalate</span>
+              </button>
+              <button class="action-button" (click)="teamChat()" type="button">
+                <div class="action-glow"></div>
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Team Chat</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Recent Activity -->
+          <section class="activity-section">
+            <h3 class="section-title">
+              <span class="title-text">Recent Activity</span>
+              <div class="title-line"></div>
+            </h3>
+            <div class="activity-list">
+              <div
+                *ngFor="let activity of recentActivity; let i = index"
+                class="activity-item"
+                [attr.data-type]="activity.type"
+                [style.animation-delay.ms]="(i + 5) * 50">
+
+                <div class="activity-icon-wrapper">
+                  <div class="icon-glow"></div>
+                  <div class="activity-icon" [attr.data-type]="activity.type">
+                    <!-- Query Icon -->
+                    <svg *ngIf="activity.type === 'query'" viewBox="0 0 24 24" fill="none">
+                      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <!-- Update Icon -->
+                    <svg *ngIf="activity.type === 'update'" viewBox="0 0 24 24" fill="none">
+                      <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <!-- Alert Icon -->
+                    <svg *ngIf="activity.type === 'alert'" viewBox="0 0 24 24" fill="none">
+                      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="activity-content">
+                  <p class="activity-message">{{ activity.message }}</p>
+                  <div class="activity-meta">
+                    <span class="activity-time">{{ formatActivityTime(activity.timestamp) }}</span>
+                    <span class="activity-user" *ngIf="activity.user">{{ activity.user }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="recentActivity.length === 0" class="activity-empty">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M18 8A6 6 0 106 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>No recent activity</p>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Holographic Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

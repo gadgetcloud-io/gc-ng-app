@@ -1,0 +1,78 @@
+<aside class="holo-sidebar" [class.open]="isOpen" *ngIf="navigation">
+  <div class="sidebar-glow"></div>
+
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="header-glow"></div>
+    <div class="logo-section">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path [attr.d]="navigation.logoIcon"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <h1 class="brand-name">{{ navigation.brandName }}</h1>
+        <p class="brand-subtitle">{{ navigation.brandSubtitle }}</p>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="user-info-card">
+      <div class="user-avatar">
+        <div class="avatar-ring"></div>
+        <span class="avatar-text">{{ userDisplayName.charAt(0).toUpperCase() }}</span>
+      </div>
+      <div class="user-details">
+        <div class="user-name">{{ userDisplayName }}</div>
+        <div class="user-role">{{ authService.currentUserValue?.role }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sidebar-nav">
+    <a *ngFor="let item of filteredNavItems"
+       [routerLink]="item.route"
+       routerLinkActive="active"
+       class="nav-item"
+       (click)="closeSidebarOnMobile()">
+      <div class="nav-glow"></div>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path [attr.d]="item.icon"
+              [attr.fill]="item.icon.startsWith('M3 13') ? 'currentColor' : 'none'"
+              [attr.stroke]="item.icon.startsWith('M3 13') ? 'none' : 'currentColor'"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="nav-text">{{ item.label }}</span>
+      <span class="nav-badge" *ngIf="item.badge">{{ item.badge }}</span>
+      <div class="nav-indicator"></div>
+    </a>
+
+    <!-- Divider -->
+    <div class="nav-divider"></div>
+
+    <!-- Logout -->
+    <a class="nav-item logout" (click)="logout()">
+      <div class="nav-glow"></div>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="nav-text">Logout</span>
+      <div class="nav-indicator"></div>
+    </a>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="footer-glow"></div>
+    <div class="version-info">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Version 1.0.0</span>
+    </div>
+  </div>
+</aside>

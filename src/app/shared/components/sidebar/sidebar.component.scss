@@ -1,0 +1,523 @@
+/**
+ * Reusable Sidebar Component - Liquid Glass Holographic Theme
+ *
+ * Consistent styling across all roles
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&display=swap');
+
+:host {
+  --sidebar-width: 280px;
+  --sidebar-transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --color-bg-dark: #0a0e27;
+  --color-bg-darker: #0f1729;
+  --color-electric-blue: #0ea5e9;
+  --color-cyan: #06b6d4;
+  --color-blue: #3b82f6;
+  --color-bright-cyan: #22d3ee;
+  --color-glass: rgba(15, 23, 41, 0.4);
+  --color-glass-border: rgba(14, 165, 233, 0.2);
+
+  --shadow-glow: 0 0 30px rgba(14, 165, 233, 0.15);
+  --shadow-glow-strong: 0 0 40px rgba(14, 165, 233, 0.3);
+}
+
+.holo-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--color-glass);
+  backdrop-filter: blur(30px) saturate(180%);
+  border-right: 1px solid var(--color-glass-border);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateX(0);
+  transition: var(--sidebar-transition);
+
+  @media (max-width: 968px) {
+    transform: translateX(-100%);
+    box-shadow: none;
+
+    &.open {
+      transform: translateX(0);
+      box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+.sidebar-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(14, 165, 233, 0.15),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+// ===========================
+// Sidebar Header
+// ===========================
+
+.sidebar-header {
+  position: relative;
+  padding: 2rem 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--color-glass-border);
+  background: linear-gradient(
+    to bottom,
+    rgba(14, 165, 233, 0.05),
+    transparent
+  );
+}
+
+.header-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(6, 182, 212, 0.2),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+// Logo Section
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-electric-blue), var(--color-cyan));
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+
+  svg {
+    width: 28px;
+    height: 28px;
+    color: white;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+  }
+}
+
+.logo-text {
+  flex: 1;
+}
+
+.brand-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-bright-cyan), var(--color-electric-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+.brand-subtitle {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  color: var(--color-cyan);
+  margin: 0;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+// User Info Card
+.user-info-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(14, 165, 233, 0.1),
+      transparent
+    );
+    animation: shimmer 3s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% { left: -100%; }
+  50% { left: 100%; }
+}
+
+.user-avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.avatar-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--color-electric-blue),
+    var(--color-cyan),
+    var(--color-bright-cyan),
+    var(--color-electric-blue)
+  );
+  animation: rotateRing 4s linear infinite;
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.avatar-text {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-darker);
+  border-radius: 50%;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-bright-cyan);
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+}
+
+.user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+  color: var(--color-cyan);
+  text-transform: capitalize;
+  opacity: 0.9;
+}
+
+// ===========================
+// Sidebar Navigation
+// ===========================
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem 0.75rem;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(14, 165, 233, 0.05);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-electric-blue);
+    border-radius: 3px;
+    box-shadow: 0 0 6px rgba(14, 165, 233, 0.4);
+
+    &:hover {
+      background: var(--color-cyan);
+    }
+  }
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.5rem;
+  background: rgba(14, 165, 233, 0.03);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: rgba(14, 165, 233, 0.1);
+    border-color: rgba(14, 165, 233, 0.3);
+    color: white;
+    transform: translateX(4px);
+
+    .nav-glow {
+      opacity: 1;
+    }
+
+    .nav-icon {
+      color: var(--color-bright-cyan);
+      transform: scale(1.1);
+    }
+  }
+
+  &.active {
+    background: rgba(14, 165, 233, 0.15);
+    border-color: var(--color-cyan);
+    color: var(--color-bright-cyan);
+
+    .nav-indicator {
+      width: 4px;
+    }
+
+    .nav-icon {
+      color: var(--color-bright-cyan);
+    }
+  }
+
+  &.logout {
+    margin-top: 0.5rem;
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: rgba(248, 113, 113, 0.8);
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+
+      .nav-icon {
+        color: #f87171;
+      }
+    }
+  }
+}
+
+.nav-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(14, 165, 233, 0.15),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-badge {
+  padding: 0.125rem 0.5rem;
+  background: var(--color-electric-blue);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+}
+
+.nav-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 70%;
+  background: linear-gradient(to bottom, var(--color-cyan), var(--color-electric-blue));
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.6);
+  transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-glass-border),
+    transparent
+  );
+  margin: 1rem 0.5rem;
+}
+
+// ===========================
+// Sidebar Footer
+// ===========================
+
+.sidebar-footer {
+  position: relative;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-glass-border);
+  background: linear-gradient(
+    to top,
+    rgba(14, 165, 233, 0.05),
+    transparent
+  );
+}
+
+.footer-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: radial-gradient(
+    ellipse at bottom,
+    rgba(6, 182, 212, 0.15),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.version-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.75rem;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: var(--color-cyan);
+    opacity: 0.6;
+  }
+
+  span {
+    opacity: 0.7;
+  }
+}
+
+// ===========================
+// Responsive Design
+// ===========================
+
+@media (max-width: 768px) {
+  .holo-sidebar {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .sidebar-header {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .brand-name {
+    font-size: 1.125rem;
+  }
+
+  .nav-item {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-header {
+    padding: 1.25rem 1rem 1rem;
+  }
+
+  .logo-section {
+    gap: 0.75rem;
+  }
+
+  .user-info-card {
+    padding: 0.625rem;
+  }
+
+  .user-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .avatar-text {
+    font-size: 1rem;
+  }
+
+  .user-name {
+    font-size: 0.8125rem;
+  }
+}

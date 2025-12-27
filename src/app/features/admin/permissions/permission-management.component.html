@@ -1,0 +1,246 @@
+<div class="holo-permissions">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Container -->
+  <div class="permissions-container">
+    <!-- Holographic Header -->
+    <header class="holo-header">
+      <div class="header-glow"></div>
+      <h1 class="holo-title">Permission Matrix</h1>
+      <p class="holo-subtitle">Configure Role-Based Access Control</p>
+
+      <!-- Header Actions -->
+      <div class="header-actions" *ngIf="hasChanges">
+        <button class="neon-button secondary" (click)="resetPermissions()" type="button">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Reset</span>
+          <div class="button-glow"></div>
+        </button>
+        <button class="neon-button primary" (click)="savePermissions()" [disabled]="loading" type="button">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>{{ loading ? 'Saving...' : 'Save Changes' }}</span>
+          <div class="button-glow"></div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Role Selector -->
+    <section class="role-selector-section">
+      <h2 class="section-title">
+        <span class="title-text">Select Role</span>
+        <div class="title-line"></div>
+      </h2>
+
+      <div class="role-cards-grid">
+        <div *ngFor="let role of roles; let i = index"
+             class="role-card"
+             [class.selected]="selectedRole === role.role"
+             [attr.data-role]="role.role"
+             [style.animation-delay.ms]="i * 80"
+             (click)="selectRole(role.role)">
+          <div class="card-glow"></div>
+          <div class="card-scan-line"></div>
+
+          <div class="role-badge" [style.background]="role.color">
+            {{ role.role }}
+          </div>
+
+          <h3 class="role-name">{{ role.displayName }}</h3>
+          <p class="role-description">{{ role.description }}</p>
+
+          <div class="role-footer">
+            <div class="permission-count-badge">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>{{ role.permissions.length }} resources</span>
+            </div>
+          </div>
+
+          <div class="role-check" *ngIf="selectedRole === role.role">
+            <div class="check-ring"></div>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Permissions Section -->
+    <section class="permissions-section" *ngIf="selectedRoleData">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="title-text">
+            <span class="role-highlight" [style.color]="selectedRoleData.color">
+              {{ selectedRoleData.displayName }}
+            </span>
+            Permissions
+          </span>
+          <div class="title-line"></div>
+        </h2>
+        <p class="section-description">
+          Configure what {{ selectedRoleData.displayName.toLowerCase() }}s can view, create, update, and delete
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-state">
+        <div class="holo-spinner">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+        </div>
+        <p class="loading-text">Loading permissions matrix...</p>
+      </div>
+
+      <!-- Permissions Grid -->
+      <div *ngIf="!loading" class="permissions-grid">
+        <div *ngFor="let permission of selectedRoleData.permissions; let i = index"
+             class="permission-card"
+             [style.animation-delay.ms]="i * 60">
+          <div class="card-glow"></div>
+          <div class="card-scan-line"></div>
+
+          <div class="permission-header">
+            <h3 class="resource-name">
+              <span class="resource-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              {{ permission.displayName }}
+            </h3>
+            <div class="active-count-badge">
+              {{ (permission.actions.view ? 1 : 0) +
+                 (permission.actions.create ? 1 : 0) +
+                 (permission.actions.update ? 1 : 0) +
+                 (permission.actions.delete ? 1 : 0) }}/4
+            </div>
+          </div>
+
+          <div class="permission-actions">
+            <!-- View -->
+            <label class="permission-toggle">
+              <input type="checkbox"
+                     [(ngModel)]="permission.actions.view"
+                     (change)="onPermissionChange()">
+              <div class="toggle-switch">
+                <div class="toggle-slider"></div>
+                <div class="toggle-glow"></div>
+              </div>
+              <div class="toggle-label">
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>View</span>
+              </div>
+            </label>
+
+            <!-- Create -->
+            <label class="permission-toggle">
+              <input type="checkbox"
+                     [(ngModel)]="permission.actions.create"
+                     (change)="onPermissionChange()">
+              <div class="toggle-switch">
+                <div class="toggle-slider"></div>
+                <div class="toggle-glow"></div>
+              </div>
+              <div class="toggle-label">
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 4v16m8-8H4"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Create</span>
+              </div>
+            </label>
+
+            <!-- Update -->
+            <label class="permission-toggle">
+              <input type="checkbox"
+                     [(ngModel)]="permission.actions.update"
+                     (change)="onPermissionChange()">
+              <div class="toggle-switch">
+                <div class="toggle-slider"></div>
+                <div class="toggle-glow"></div>
+              </div>
+              <div class="toggle-label">
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Update</span>
+              </div>
+            </label>
+
+            <!-- Delete -->
+            <label class="permission-toggle">
+              <input type="checkbox"
+                     [(ngModel)]="permission.actions.delete"
+                     (change)="onPermissionChange()">
+              <div class="toggle-switch">
+                <div class="toggle-slider"></div>
+                <div class="toggle-glow"></div>
+              </div>
+              <div class="toggle-label">
+                <svg class="action-icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Delete</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Save Footer -->
+      <div class="save-footer" *ngIf="hasChanges && !loading">
+        <div class="footer-glow"></div>
+        <div class="footer-content">
+          <div class="save-message">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>You have unsaved changes</span>
+          </div>
+          <div class="save-actions">
+            <button class="neon-button secondary" (click)="resetPermissions()" type="button">
+              <span>Discard</span>
+              <div class="button-glow"></div>
+            </button>
+            <button class="neon-button primary" (click)="savePermissions()" type="button">
+              <span>Save Changes</span>
+              <div class="button-glow"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Floating Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

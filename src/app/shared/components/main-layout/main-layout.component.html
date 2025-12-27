@@ -1,0 +1,50 @@
+<div class="main-layout">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay"
+       *ngIf="sidebarOpen && isMobile"
+       (click)="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <app-sidebar
+    [isOpen]="sidebarOpen"
+    [isMobile]="isMobile"
+    (toggle)="toggleSidebar()"
+    (close)="closeSidebar()">
+  </app-sidebar>
+
+  <!-- Main Content Wrapper -->
+  <div class="content-wrapper" [class.sidebar-open]="sidebarOpen">
+    <!-- Topbar -->
+    <app-topbar
+      [isMobile]="isMobile"
+      [sidebarOpen]="sidebarOpen"
+      [pageTitle]="pageTitle"
+      (toggleSidebar)="toggleSidebar()">
+    </app-topbar>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Footer -->
+    <app-footer></app-footer>
+  </div>
+
+  <!-- Floating Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

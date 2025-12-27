@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { User, UserRole, LoginRequest, SignupRequest, AuthResponse } from '../models/user.model';
+import { PermissionService } from './permission.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,19 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private permissionService: PermissionService
   ) {
     // Load user from localStorage on init
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
+      const user = JSON.parse(storedUser);
+      this.currentUserSubject.next(user);
+
+      // Load permissions for the user's role
+      if (user.role) {
+        this.loadPermissionsForRole(user.role);
+      }
     }
   }
 
@@ -44,6 +52,9 @@ export class AuthService {
             localStorage.setItem('access_token', response.access_token);
             localStorage.setItem('currentUser', JSON.stringify(response.user));
             this.currentUserSubject.next(response.user);
+
+            // Load permissions for the user's role
+            this.loadPermissionsForRole(response.user.role);
           }
         })
       );
@@ -57,6 +68,9 @@ export class AuthService {
             localStorage.setItem('access_token', response.access_token);
             localStorage.setItem('currentUser', JSON.stringify(response.user));
             this.currentUserSubject.next(response.user);
+
+            // Load permissions for the user's role
+            this.loadPermissionsForRole(response.user.role);
           }
         })
       );
@@ -76,6 +90,10 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+
+    // Clear permissions
+    this.permissionService.clearPermissions();
+
     this.router.navigate(['/login']);
   }
 
@@ -111,6 +129,22 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth/change-password`, {
       old_password: oldPassword,
       new_password: newPassword
+    });
+  }
+
+  /**
+   * Load permissions for a specific role
+   * This is called after successful login/signup
+   */
+  private loadPermissionsForRole(role: UserRole): void {
+    this.permissionService.loadPermissions(role).subscribe({
+      next: (permissions) => {
+        console.log('Permissions loaded for role:', role, permissions);
+      },
+      error: (error) => {
+        console.warn('Failed to load permissions for role:', role, error);
+        // Even if permissions fail to load, we continue with basic role-based access
+      }
     });
   }
 }

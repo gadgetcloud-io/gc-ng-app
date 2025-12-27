@@ -1,0 +1,235 @@
+<div class="holo-dashboard">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    <!-- Holographic Header -->
+    <header class="holo-header">
+      <div class="header-glow"></div>
+      <h1 class="holo-title">Admin Command Center</h1>
+      <p class="holo-subtitle">Platform Overview & Statistics</p>
+    </header>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="holo-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text">Initializing holographic display...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!loading" class="dashboard-content">
+      <!-- Holographic Stats Grid -->
+      <section class="stats-section">
+        <div class="stats-grid">
+          <!-- Total Users -->
+          <div class="holo-card" data-type="users">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+                        stroke="url(#gradient-users)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-users">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#06b6d4"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="stat-data">
+                <div class="stat-value">{{ userStats?.total || 0 }}</div>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-bar">
+                  <div class="bar-fill" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Active Users -->
+          <div class="holo-card" data-type="active">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4 12 14.01l-3-3"
+                        stroke="url(#gradient-active)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-active">
+                      <stop offset="0%" stop-color="#10b981"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="stat-data">
+                <div class="stat-value">{{ userStats?.byStatus?.active || 0 }}</div>
+                <div class="stat-label">Active Users</div>
+                <div class="stat-bar">
+                  <div class="bar-fill" [style.width.%]="(userStats?.byStatus?.active || 0) / (userStats?.total || 1) * 100"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Recent Signups -->
+          <div class="holo-card" data-type="signups">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M12.5 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM20 8v6M23 11h-6"
+                        stroke="url(#gradient-signups)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-signups">
+                      <stop offset="0%" stop-color="#3b82f6"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="stat-data">
+                <div class="stat-value">{{ userStats?.recentSignups || 0 }}</div>
+                <div class="stat-label">Recent Signups</div>
+                <div class="stat-meta">Last 7 days</div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Audit Logs -->
+          <div class="holo-card" data-type="logs">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <div class="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="url(#gradient-logs)" stroke-width="2"/>
+                  <path d="M12 6v6l4 2"
+                        stroke="url(#gradient-logs)"
+                        stroke-width="2"
+                        stroke-linecap="round"/>
+                  <defs>
+                    <linearGradient id="gradient-logs">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#3b82f6"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="stat-data">
+                <div class="stat-value">{{ auditStats?.total || 0 }}</div>
+                <div class="stat-label">Audit Logs</div>
+                <div class="stat-meta">All time</div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Holographic Actions Section -->
+      <section class="actions-section">
+        <h2 class="section-title">
+          <span class="title-text">Quick Actions</span>
+          <div class="title-line"></div>
+        </h2>
+
+        <div class="actions-grid">
+          <!-- User Management -->
+          <div class="action-card" routerLink="/admin/users">
+            <div class="action-glow"></div>
+            <div class="action-content">
+              <div class="action-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="action-details">
+                <h3 class="action-title">User Management</h3>
+                <p class="action-description">View, edit, and manage all platform users</p>
+              </div>
+              <div class="action-arrow">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M12 5l7 7-7 7"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="action-scan"></div>
+          </div>
+
+          <!-- Audit Logs -->
+          <div class="action-card" routerLink="/admin/audit-logs">
+            <div class="action-glow"></div>
+            <div class="action-content">
+              <div class="action-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 6v6l4 2"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="action-details">
+                <h3 class="action-title">Audit Logs</h3>
+                <p class="action-description">View audit trail and security events</p>
+              </div>
+              <div class="action-arrow">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M12 5l7 7-7 7"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="action-scan"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Floating Holographic Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

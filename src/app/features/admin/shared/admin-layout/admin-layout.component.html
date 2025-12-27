@@ -1,0 +1,162 @@
+<div class="holo-admin-layout">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay"
+       *ngIf="sidebarOpen && isMobile"
+       (click)="toggleSidebar()"></div>
+
+  <!-- Holographic Sidebar -->
+  <aside class="holo-sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-glow"></div>
+
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+      <div class="header-glow"></div>
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1 class="brand-name">GadgetCloud</h1>
+          <p class="brand-subtitle">Admin Panel</p>
+        </div>
+      </div>
+
+      <!-- User Info -->
+      <div class="user-info-card">
+        <div class="user-avatar">
+          <div class="avatar-ring"></div>
+          <span class="avatar-text">{{ userDisplayName.charAt(0).toUpperCase() }}</span>
+        </div>
+        <div class="user-details">
+          <div class="user-name">{{ userDisplayName }}</div>
+          <div class="user-role">{{ authService.currentUserValue?.role }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <!-- Dashboard -->
+      <a routerLink="/admin/dashboard"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebarOnMobile()">
+        <div class="nav-glow"></div>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
+                fill="currentColor"/>
+        </svg>
+        <span class="nav-text">Dashboard</span>
+        <div class="nav-indicator"></div>
+      </a>
+
+      <!-- User Management -->
+      <a *ngIf="permissionService.canViewUsers()"
+         routerLink="/admin/users"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebarOnMobile()">
+        <div class="nav-glow"></div>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav-text">User Management</span>
+        <div class="nav-indicator"></div>
+      </a>
+
+      <!-- Audit Logs -->
+      <a *ngIf="permissionService.canViewAuditLogs()"
+         routerLink="/admin/audit-logs"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebarOnMobile()">
+        <div class="nav-glow"></div>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-text">Audit Logs</span>
+        <div class="nav-indicator"></div>
+      </a>
+
+      <!-- Permissions -->
+      <a *ngIf="permissionService.canViewPermissions()"
+         routerLink="/admin/permissions"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebarOnMobile()">
+        <div class="nav-glow"></div>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav-text">Permissions</span>
+        <div class="nav-indicator"></div>
+      </a>
+
+      <!-- Divider -->
+      <div class="nav-divider"></div>
+
+      <!-- Logout -->
+      <a class="nav-item logout" (click)="logout()">
+        <div class="nav-glow"></div>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav-text">Logout</span>
+        <div class="nav-indicator"></div>
+      </a>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="footer-glow"></div>
+      <div class="version-info">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span>Version 1.0.0</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content" [class.sidebar-open]="sidebarOpen">
+    <!-- Mobile Toggle Button -->
+    <button class="menu-toggle"
+            (click)="toggleSidebar()"
+            [attr.aria-label]="sidebarOpen ? 'Close menu' : 'Open menu'">
+      <span class="toggle-line" [class.open]="sidebarOpen"></span>
+      <span class="toggle-line" [class.open]="sidebarOpen"></span>
+      <span class="toggle-line" [class.open]="sidebarOpen"></span>
+    </button>
+
+    <!-- Router Outlet -->
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Floating Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

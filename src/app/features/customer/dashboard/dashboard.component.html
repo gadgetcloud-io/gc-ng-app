@@ -1,25 +1,59 @@
-<div class="dashboard">
-  <!-- Header -->
-  <header class="header">
-    <div class="header-content">
-      <h1>🔧 GadgetCloud</h1>
-      <div class="user-info">
-        <span>{{ authService.currentUserValue?.email }}</span>
-        <button (click)="logout()" class="logout-btn">Logout</button>
-      </div>
-    </div>
-  </header>
+<div class="holo-customer-dashboard-page">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+    <div class="gradient-mesh"></div>
+  </div>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="welcome-section">
-      <h2>Welcome back, {{ userDisplayName }}!</h2>
-      <p>Manage your devices and repairs</p>
-    </div>
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Main Container -->
+  <div class="dashboard-container">
+    <!-- Holographic Header -->
+    <header class="holo-header">
+      <div class="header-glow"></div>
+      <div class="header-content">
+        <h1 class="holo-title">GadgetCloud Dashboard</h1>
+        <p class="holo-subtitle">Manage Your Devices & Repairs</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <div class="stat-glow"></div>
+          <div class="stat-value">{{ items.length }}</div>
+          <div class="stat-label">Total Devices</div>
+          <div class="stat-pulse"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <div class="welcome-content">
+        <h2 class="welcome-title">Welcome back, {{ userDisplayName }}!</h2>
+        <p class="welcome-subtitle">Manage your devices and repairs</p>
+        <div class="user-actions">
+          <span class="user-email">{{ authService.currentUserValue?.email }}</span>
+          <button (click)="logout()" class="neon-btn neon-btn-secondary" type="button">
+            <span class="btn-content">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 11a10 10 0 110-20 10 10 0 010 20z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Logout</span>
+            </span>
+            <div class="btn-glow"></div>
+          </button>
+        </div>
+      </div>
+    </section>
 
     <!-- Stats Cards -->
     <div class="stats-grid">
       <div class="stat-card">
+        <div class="card-glow"></div>
+        <div class="card-scan-line"></div>
         <div class="stat-icon">📱</div>
         <div class="stat-info">
           <h3>{{ items.length }}</h3>
@@ -27,6 +61,8 @@
         </div>
       </div>
       <div class="stat-card">
+        <div class="card-glow"></div>
+        <div class="card-scan-line"></div>
         <div class="stat-icon">✅</div>
         <div class="stat-info">
           <h3>{{ (items | filter:'status':'active').length }}</h3>
@@ -34,6 +70,8 @@
         </div>
       </div>
       <div class="stat-card">
+        <div class="card-glow"></div>
+        <div class="card-scan-line"></div>
         <div class="stat-icon">🔧</div>
         <div class="stat-info">
           <h3>{{ (items | filter:'status':'in_repair').length }}</h3>
@@ -44,9 +82,26 @@
 
     <!-- Devices List -->
     <div class="devices-section">
-      <h3>My Devices</h3>
-      <div class="devices-grid" *ngIf="!loading && items.length > 0">
-        <div class="device-card" *ngFor="let item of items">
+      <h3 class="section-title">My Devices</h3>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-state">
+        <div class="holo-spinner">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring"></div>
+        </div>
+        <p class="loading-text">Loading your devices...</p>
+      </div>
+
+      <!-- Devices Grid -->
+      <div *ngIf="!loading && items.length > 0" class="devices-grid">
+        <div
+          class="device-card"
+          *ngFor="let item of items; let i = index"
+          [style.animation-delay.ms]="i * 50">
+          <div class="card-glow"></div>
+          <div class="card-scan-line"></div>
           <div class="device-icon">{{ getCategoryIcon(item.category) }}</div>
           <div class="device-info">
             <h4>{{ item.name }}</h4>
@@ -57,10 +112,29 @@
           </div>
         </div>
       </div>
-      <div class="loading" *ngIf="loading">Loading devices...</div>
-      <div class="empty-state" *ngIf="!loading && items.length === 0">
-        <p>No devices found. Add your first device!</p>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && items.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <div class="icon-glow"></div>
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6h2zm0 8h-2v2h2z"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="empty-title">No Devices Found</h3>
+        <p class="empty-description">Add your first device to get started!</p>
       </div>
     </div>
-  </main>
+  </div>
+
+  <!-- Floating Holographic Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
 </div>

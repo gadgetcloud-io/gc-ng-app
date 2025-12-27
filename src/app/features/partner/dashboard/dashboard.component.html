@@ -1,0 +1,413 @@
+<div class="holo-partner-dashboard-page">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    <!-- Holographic Header -->
+    <header class="holo-header">
+      <div class="header-glow"></div>
+      <div class="header-content">
+        <div class="header-left">
+          <h1 class="holo-title">Workshop Control</h1>
+          <p class="holo-subtitle">{{ userDisplayName }} <span class="divider">|</span> Partner Dashboard</p>
+        </div>
+        <button class="neon-logout-btn" (click)="logout()" type="button">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Logout</span>
+          <div class="button-glow"></div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="holo-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text">Initializing workshop systems...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!loading" class="dashboard-content">
+      <!-- Holographic Metrics Grid -->
+      <section class="metrics-section">
+        <div class="metrics-grid">
+          <!-- Total Repairs -->
+          <div class="holo-metric-card" data-type="total">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"
+                        stroke="url(#gradient-tool)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-tool">
+                      <stop offset="0%" stop-color="#0ea5e9"/>
+                      <stop offset="100%" stop-color="#06b6d4"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">TOTAL REPAIRS</div>
+                <div class="metric-value">{{ metrics.totalRepairs }}</div>
+                <div class="metric-trend" [class.positive]="metrics.trends.repairs > 0" [class.negative]="metrics.trends.repairs < 0">
+                  <svg *ngIf="metrics.trends.repairs > 0" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg *ngIf="metrics.trends.repairs < 0" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ metrics.trends.repairs }}% vs last month</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Pending Repairs -->
+          <div class="holo-metric-card" data-type="pending">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="url(#gradient-pending)" stroke-width="2"/>
+                  <path d="M12 6v6l4 2" stroke="url(#gradient-pending)" stroke-width="2" stroke-linecap="round"/>
+                  <defs>
+                    <linearGradient id="gradient-pending">
+                      <stop offset="0%" stop-color="#f59e0b"/>
+                      <stop offset="100%" stop-color="#fbbf24"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">PENDING REPAIRS</div>
+                <div class="metric-value">{{ metrics.pendingRepairs }}</div>
+                <div class="metric-status">
+                  <span class="pulse-dot"></span>
+                  <span>Requires attention</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Completed Repairs -->
+          <div class="holo-metric-card" data-type="completed">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3"
+                        stroke="url(#gradient-completed)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-completed">
+                      <stop offset="0%" stop-color="#10b981"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">COMPLETED</div>
+                <div class="metric-value">{{ metrics.completedRepairs }}</div>
+                <div class="metric-status">
+                  <span>This month</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+
+          <!-- Revenue -->
+          <div class="holo-metric-card" data-type="revenue">
+            <div class="card-glow"></div>
+            <div class="metric-content">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <line x1="12" y1="1" x2="12" y2="23" stroke="url(#gradient-revenue)" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"
+                        stroke="url(#gradient-revenue)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+                  <defs>
+                    <linearGradient id="gradient-revenue">
+                      <stop offset="0%" stop-color="#3b82f6"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <div class="metric-label">REVENUE</div>
+                <div class="metric-value">${{ metrics.revenue.toLocaleString() }}</div>
+                <div class="metric-trend" [class.positive]="metrics.trends.revenue > 0" [class.negative]="metrics.trends.revenue < 0">
+                  <svg *ngIf="metrics.trends.revenue > 0" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 15l-6-6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg *ngIf="metrics.trends.revenue < 0" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>{{ metrics.trends.revenue }}% vs last month</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-scan-line"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Grid -->
+      <div class="content-grid">
+        <!-- Repair Queue Section -->
+        <section class="repair-queue-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="title-text">Active Repair Queue</span>
+              <div class="title-line"></div>
+            </h2>
+            <div class="queue-badge">
+              <span class="badge-value">{{ repairQueue.length }}</span>
+              <span class="badge-label">requests</span>
+            </div>
+          </div>
+
+          <div class="repair-queue">
+            <div
+              *ngFor="let repair of repairQueue; let i = index"
+              class="repair-card"
+              (click)="viewRepairDetails(repair)"
+              [attr.data-priority]="repair.priority"
+              [attr.data-status]="repair.status"
+              [style.animation-delay.ms]="i * 50">
+
+              <!-- Priority Neon Edge -->
+              <div class="priority-edge" [attr.data-priority]="repair.priority"></div>
+
+              <!-- Card Glow -->
+              <div class="card-glow"></div>
+
+              <!-- Repair Content -->
+              <div class="repair-content">
+                <!-- Header Row -->
+                <div class="repair-header">
+                  <div class="device-info">
+                    <div class="device-icon-wrapper">
+                      <div class="icon-glow"></div>
+                      <!-- Phone Icon -->
+                      <svg *ngIf="repair.deviceType === 'phone'" viewBox="0 0 24 24" fill="none" class="device-icon">
+                        <rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <line x1="12" y1="18" x2="12.01" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                      <!-- Laptop Icon -->
+                      <svg *ngIf="repair.deviceType === 'laptop'" viewBox="0 0 24 24" fill="none" class="device-icon">
+                        <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M2 17h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                      <!-- Tablet Icon -->
+                      <svg *ngIf="repair.deviceType === 'tablet'" viewBox="0 0 24 24" fill="none" class="device-icon">
+                        <rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <line x1="12" y1="18" x2="12.01" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                      <!-- Watch Icon -->
+                      <svg *ngIf="repair.deviceType === 'watch'" viewBox="0 0 24 24" fill="none" class="device-icon">
+                        <rect x="9" y="7" width="6" height="10" rx="1" stroke="currentColor" stroke-width="2"/>
+                        <path d="M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M9 17v3a1 1 0 001 1h4a1 1 0 001-1v-3"
+                              stroke="currentColor" stroke-width="2"/>
+                      </svg>
+                      <!-- Default Tool Icon -->
+                      <svg *ngIf="repair.deviceType === 'other'" viewBox="0 0 24 24" fill="none" class="device-icon">
+                        <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"
+                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <div class="device-details">
+                      <h3 class="device-name">{{ repair.device }}</h3>
+                      <p class="repair-id">{{ repair.id }}</p>
+                    </div>
+                  </div>
+                  <div class="status-badge" [attr.data-status]="repair.status">
+                    {{ repair.status.replace('_', ' ').toUpperCase() }}
+                  </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="repair-details">
+                  <div class="detail-item">
+                    <span class="detail-label">CUSTOMER</span>
+                    <span class="detail-value">{{ repair.customer }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ISSUE</span>
+                    <span class="detail-value">{{ repair.issue }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">ASSIGNED</span>
+                    <span class="detail-value">{{ formatDate(repair.assignedDate) }}</span>
+                  </div>
+                  <div class="detail-item" *ngIf="repair.estimatedCompletion">
+                    <span class="detail-label">EST. COMPLETION</span>
+                    <span class="detail-value">{{ formatDate(repair.estimatedCompletion) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Arrow -->
+              <div class="repair-action">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+              <!-- Scan Line -->
+              <div class="card-scan-line"></div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="repairQueue.length === 0" class="empty-state">
+              <div class="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h3 class="empty-title">No Active Repairs</h3>
+              <p class="empty-description">Your repair queue is empty. Great work!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <!-- Quick Actions -->
+          <section class="quick-actions-section">
+            <h3 class="section-title">
+              <span class="title-text">Quick Actions</span>
+              <div class="title-line"></div>
+            </h3>
+            <div class="actions-grid">
+              <button class="action-btn" data-type="primary" (click)="newRepairRequest()" type="button">
+                <div class="btn-glow"></div>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>New Repair</span>
+              </button>
+              <button class="action-btn" data-type="secondary" (click)="updateInventory()" type="button">
+                <div class="btn-glow"></div>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Inventory</span>
+              </button>
+              <button class="action-btn" data-type="secondary" (click)="viewAllRepairs()" type="button">
+                <div class="btn-glow"></div>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>All Repairs</span>
+              </button>
+              <button class="action-btn" data-type="secondary" (click)="generateReport()" type="button">
+                <div class="btn-glow"></div>
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Report</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Inventory Status -->
+          <section class="inventory-section">
+            <h3 class="section-title">
+              <span class="title-text">Inventory Status</span>
+              <div class="title-line"></div>
+            </h3>
+            <div class="inventory-list">
+              <div
+                *ngFor="let item of inventory; let i = index"
+                class="inventory-item"
+                [attr.data-level]="getStockLevel(item)"
+                [style.animation-delay.ms]="(i + 5) * 50">
+
+                <div class="item-header">
+                  <span class="item-name">{{ item.name }}</span>
+                  <span class="item-stock">
+                    <span class="stock-number">{{ item.stock }}</span>
+                    <span class="stock-unit">{{ item.unit }}</span>
+                  </span>
+                </div>
+
+                <!-- Holographic Progress Bar -->
+                <div class="stock-bar">
+                  <div class="bar-glow"></div>
+                  <div
+                    class="stock-fill"
+                    [style.width.%]="getStockPercentage(item)"
+                    [attr.data-level]="getStockLevel(item)">
+                  </div>
+                </div>
+
+                <!-- Low Stock Warning -->
+                <div class="stock-warning" *ngIf="getStockLevel(item) === 'low'">
+                  <div class="warning-pulse"></div>
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Low stock - reorder soon</span>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="inventory.length === 0" class="inventory-empty">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <p>No inventory tracked</p>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Holographic Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

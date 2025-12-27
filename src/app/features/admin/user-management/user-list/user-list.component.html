@@ -1,0 +1,342 @@
+<div class="holo-users-page">
+  <!-- Liquid Background -->
+  <div class="liquid-background">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+    <div class="gradient-mesh"></div>
+  </div>
+
+  <!-- Cyber Grid -->
+  <div class="cyber-grid"></div>
+
+  <!-- Main Container -->
+  <div class="users-container">
+    <!-- Holographic Header -->
+    <header class="holo-header">
+      <div class="header-glow"></div>
+      <div class="header-content">
+        <h1 class="holo-title">User Database</h1>
+        <p class="holo-subtitle">Access & Role Management System</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <div class="stat-glow"></div>
+          <div class="stat-value">{{ totalUsers }}</div>
+          <div class="stat-label">Total Users</div>
+          <div class="stat-pulse"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Holographic Filters Section -->
+    <section class="filters-section">
+      <div class="filters-grid">
+        <!-- Holographic Search -->
+        <div class="filter-item search-item">
+          <div class="holo-search">
+            <div class="search-glow"></div>
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 16l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search by email or name..."
+              [value]="searchTerm"
+              (input)="onSearchChange($any($event.target).value)"
+            />
+            <button
+              *ngIf="searchTerm"
+              class="search-clear"
+              (click)="searchTerm = ''; onSearchChange('')"
+              type="button"
+              aria-label="Clear search">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <div class="input-scan"></div>
+          </div>
+        </div>
+
+        <!-- Role Filter -->
+        <div class="filter-item">
+          <label class="filter-label">Role</label>
+          <div class="holo-select">
+            <div class="select-glow"></div>
+            <select
+              class="select-input"
+              [(ngModel)]="selectedRole"
+              (change)="onFilterChange()">
+              <option value="">All Roles</option>
+              <option *ngFor="let role of userRoles" [value]="role">{{ role }}</option>
+            </select>
+            <svg class="select-arrow" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="filter-item">
+          <label class="filter-label">Status</label>
+          <div class="holo-select">
+            <div class="select-glow"></div>
+            <select
+              class="select-input"
+              [(ngModel)]="selectedStatus"
+              (change)="onFilterChange()">
+              <option value="">All Statuses</option>
+              <option *ngFor="let status of userStatuses" [value]="status">
+                {{ getStatusDisplay(status) }}
+              </option>
+            </select>
+            <svg class="select-arrow" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Clear Filters -->
+        <div class="filter-item clear-item">
+          <button
+            class="neon-btn neon-btn-secondary"
+            (click)="clearFilters()"
+            type="button"
+            [disabled]="!searchTerm && !selectedRole && !selectedStatus">
+            <span class="btn-content">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Clear</span>
+            </span>
+            <div class="btn-glow"></div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="holo-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="loading-text">Accessing user database...</p>
+    </div>
+
+    <!-- User List Content -->
+    <div *ngIf="!loading" class="user-list-content">
+      <!-- Empty State -->
+      <div *ngIf="dataSource.data.length === 0" class="empty-state">
+        <div class="empty-icon">
+          <div class="icon-glow"></div>
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8z"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="empty-title">No Users Found</h3>
+        <p class="empty-description">
+          {{ searchTerm || selectedRole || selectedStatus
+             ? 'No users match your search criteria'
+             : 'User database is empty' }}
+        </p>
+        <button
+          *ngIf="searchTerm || selectedRole || selectedStatus"
+          class="neon-btn neon-btn-primary"
+          (click)="clearFilters()">
+          <span class="btn-content">Clear Filters</span>
+          <div class="btn-glow"></div>
+        </button>
+      </div>
+
+      <!-- Holographic User Cards Grid -->
+      <div *ngIf="dataSource.data.length > 0" class="users-grid">
+        <div
+          *ngFor="let user of dataSource.data; let i = index"
+          class="user-card"
+          [style.animation-delay.ms]="i * 50">
+
+          <div class="card-glow"></div>
+          <div class="card-scan-line"></div>
+
+          <!-- User Header -->
+          <div class="user-header">
+            <div class="user-avatar">
+              <div class="avatar-glow"></div>
+              <div class="avatar-ring"></div>
+              <span class="avatar-text">{{ getUserName(user).charAt(0).toUpperCase() }}</span>
+            </div>
+
+            <div class="user-identity">
+              <h3 class="user-name">{{ getUserName(user) }}</h3>
+              <p class="user-email">{{ user.email }}</p>
+            </div>
+          </div>
+
+          <!-- User Metadata -->
+          <div class="user-metadata">
+            <!-- Role Badge -->
+            <div class="meta-row">
+              <span class="meta-label">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Role
+              </span>
+              <span class="role-badge role-{{ user.role }}">
+                <span class="badge-glow"></span>
+                {{ user.role }}
+              </span>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="meta-row">
+              <span class="meta-label">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Status
+              </span>
+              <span class="status-badge" [ngClass]="getStatusClass(user.status)">
+                <span class="status-pulse"></span>
+                {{ getStatusDisplay(user.status) }}
+              </span>
+            </div>
+
+            <!-- Joined Date -->
+            <div class="meta-row">
+              <span class="meta-label">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Joined
+              </span>
+              <span class="meta-value">{{ user.createdAt | date:'MMM d, y' }}</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="user-actions">
+            <button
+              *ngIf="permissionService.canChangeRoles()"
+              class="action-btn action-role"
+              (click)="openRoleChangeDialog(user)"
+              type="button"
+              title="Change Role">
+              <div class="btn-bg"></div>
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M12.5 7a4 4 0 100-8 4 4 0 000 8zM20 8v6M23 11h-6"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Change Role</span>
+            </button>
+
+            <button
+              *ngIf="permissionService.canDeactivateUsers()"
+              class="action-btn"
+              [class.action-deactivate]="user.status === 'active'"
+              [class.action-activate]="user.status !== 'active'"
+              (click)="openDeactivateDialog(user)"
+              type="button"
+              [title]="user.status === 'active' ? 'Deactivate User' : 'Activate User'">
+              <div class="btn-bg"></div>
+              <svg *ngIf="user.status === 'active'" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg *ngIf="user.status !== 'active'" viewBox="0 0 24 24" fill="none">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>{{ user.status === 'active' ? 'Deactivate' : 'Activate' }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Holographic Pagination -->
+      <div *ngIf="dataSource.data.length > 0" class="pagination-section">
+        <div class="pagination-glow"></div>
+
+        <div class="pagination-info">
+          <span class="info-label">Showing</span>
+          <span class="info-value">{{ paginator?.pageIndex * paginator?.pageSize + 1 }}</span>
+          <span class="info-label">to</span>
+          <span class="info-value">{{ Math.min((paginator?.pageIndex + 1) * paginator?.pageSize, totalUsers) }}</span>
+          <span class="info-label">of</span>
+          <span class="info-value">{{ totalUsers }}</span>
+          <span class="info-label">users</span>
+        </div>
+
+        <div class="pagination-controls">
+          <button
+            class="pagination-btn"
+            [disabled]="!paginator || paginator.pageIndex === 0"
+            (click)="paginator.previousPage(); onPageChange()"
+            type="button"
+            aria-label="Previous page">
+            <div class="btn-bg"></div>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="page-indicator">
+            <div class="page-glow"></div>
+            <span class="page-number">{{ (paginator?.pageIndex || 0) + 1 }}</span>
+          </div>
+
+          <button
+            class="pagination-btn"
+            [disabled]="!paginator || (paginator.pageIndex + 1) * paginator.pageSize >= totalUsers"
+            (click)="paginator.nextPage(); onPageChange()"
+            type="button"
+            aria-label="Next page">
+            <div class="btn-bg"></div>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="page-size-selector">
+          <label class="selector-label">Per page:</label>
+          <div class="holo-select holo-select-sm">
+            <div class="select-glow"></div>
+            <select
+              class="select-input"
+              [value]="paginator?.pageSize || 50"
+              (change)="paginator.pageSize = +$any($event.target).value; paginator.pageIndex = 0; onPageChange()">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <svg class="select-arrow" viewBox="0 0 24 24" fill="none">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Holographic Particles -->
+  <div class="holo-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</div>

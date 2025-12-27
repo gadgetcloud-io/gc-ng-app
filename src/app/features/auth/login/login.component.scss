@@ -1,171 +1,889 @@
-.login-container {
+// ============================================================================
+// GadgetCloud Authentication - Liquid Glass Design
+// Aesthetic: Futuristic Holographic with Blue/Black Palette
+// ============================================================================
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600&display=swap');
+
+// Reset to prevent white lines at edges
+:host {
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  width: 100%;
   min-height: 100vh;
+}
+
+// CSS Variables - Liquid Glass Theme
+:host {
+  // Colors - Deep blacks and electric blues
+  --color-deep-black: #0a0e27;
+  --color-dark-navy: #0f1729;
+  --color-electric-blue: #0ea5e9;
+  --color-cyan: #06b6d4;
+  --color-sky-blue: #3b82f6;
+  --color-neon-cyan: #22d3ee;
+
+  // Glass colors
+  --color-glass: rgba(15, 23, 41, 0.8);
+  --color-glass-light: rgba(15, 23, 41, 0.6);
+  --color-glass-border: rgba(14, 165, 233, 0.2);
+
+  // Text colors
+  --color-text-primary: #e0f2fe;
+  --color-text-secondary: #7dd3fc;
+  --color-text-muted: #0ea5e9;
+
+  // Shadows and glows
+  --shadow-glow: 0 0 20px rgba(14, 165, 233, 0.3);
+  --shadow-glow-strong: 0 0 40px rgba(14, 165, 233, 0.5);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  // Border radius
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  // Transitions
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Spacing
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+
+  // Typography
+  --font-display: 'Orbitron', monospace;
+  --font-body: 'Exo 2', sans-serif;
+}
+
+// ============================================================================
+// Container
+// ============================================================================
+
+.liquid-glass-container {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
+  background: var(--color-deep-black);
+  overflow: hidden;
+  font-family: var(--font-body);
 }
 
-.login-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  padding: 40px;
-  max-width: 440px;
+// ============================================================================
+// Animated Liquid Background
+// ============================================================================
+
+.liquid-background {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
 }
 
-.logo {
+.liquid-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: liquidFloat 25s ease-in-out infinite;
+
+  &.blob-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--color-electric-blue), transparent);
+    top: -200px;
+    left: -200px;
+    animation-delay: 0s;
+  }
+
+  &.blob-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--color-cyan), transparent);
+    bottom: -150px;
+    right: -150px;
+    animation-delay: -8s;
+  }
+
+  &.blob-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--color-sky-blue), transparent);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -16s;
+  }
+}
+
+@keyframes liquidFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(100px, -100px) scale(1.1);
+  }
+  50% {
+    transform: translate(-50px, 100px) scale(0.9);
+  }
+  75% {
+    transform: translate(-150px, -50px) scale(1.05);
+  }
+}
+
+.gradient-mesh {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+  opacity: 0.6;
+}
+
+// ============================================================================
+// Cyber Grid
+// ============================================================================
+
+.cyber-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridSlide 30s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes gridSlide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+// ============================================================================
+// Glass Panel
+// ============================================================================
+
+.glass-panel {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 480px;
+  background: linear-gradient(135deg, rgba(15, 23, 41, 0.9), rgba(10, 14, 39, 0.95));
+  backdrop-filter: blur(40px) saturate(150%);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-glass-border);
+  padding: 48px 40px;
+  box-shadow:
+    0 0 0 1px rgba(14, 165, 233, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: panelAppear 0.8s var(--transition-normal) backwards;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: linear-gradient(135deg,
+      rgba(14, 165, 233, 0.3) 0%,
+      transparent 25%,
+      transparent 75%,
+      rgba(6, 182, 212, 0.3) 100%
+    );
+    border-radius: var(--radius-xl);
+    z-index: -1;
+    opacity: 0.5;
+    animation: borderGlow 3s ease-in-out infinite;
+  }
+
+  @media (max-width: 480px) {
+    padding: 32px 24px;
+    max-width: 100%;
+  }
+}
+
+@keyframes panelAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// ============================================================================
+// Holographic Logo
+// ============================================================================
+
+.holo-logo {
+  position: relative;
   text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.4), transparent 70%);
+  filter: blur(30px);
+  animation: logoGlowPulse 3s ease-in-out infinite;
+}
+
+@keyframes logoGlowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.logo-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  display: block;
+  filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.6));
+  animation: logoFloat 4s ease-in-out infinite;
+
+  @media (max-width: 480px) {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--color-electric-blue), var(--color-neon-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 8px 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+
+  @media (max-width: 480px) {
+    font-size: 26px;
+  }
+}
+
+.brand-tagline {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
+}
+
+// ============================================================================
+// Mode Toggle
+// ============================================================================
+
+.mode-toggle {
+  display: flex;
+  gap: 0;
   margin-bottom: 32px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  border: 1px solid rgba(14, 165, 233, 0.1);
+}
 
-  h1 {
-    font-size: 32px;
-    margin: 0 0 8px 0;
-    color: #1a202c;
+.toggle-option {
+  position: relative;
+  flex: 1;
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  overflow: hidden;
+
+  &:hover {
+    background: rgba(14, 165, 233, 0.05);
   }
 
-  p {
-    color: #718096;
-    margin: 0;
-    font-size: 14px;
+  &.active {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(6, 182, 212, 0.2));
+  }
+
+  @media (max-width: 480px) {
+    padding: 10px 16px;
   }
 }
 
-.login-form {
-  h2 {
-    font-size: 24px;
-    color: #1a202c;
-    margin: 0 0 24px 0;
-    text-align: center;
+.toggle-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+  transition: color var(--transition-normal);
+
+  .active & {
+    color: var(--color-neon-cyan);
   }
 
-  .form-group {
-    margin-bottom: 20px;
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
+}
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #2d3748;
-      font-weight: 500;
-      font-size: 14px;
+.active-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-electric-blue), var(--color-neon-cyan));
+  animation: indicatorGlow 1.5s ease-in-out infinite;
+}
 
-      .required {
-        color: #e53e3e;
-      }
-    }
+@keyframes indicatorGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(14, 165, 233, 1);
+  }
+}
 
-    input, select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: all 0.2s;
-      box-sizing: border-box;
+// ============================================================================
+// Auth Form
+// ============================================================================
 
-      &:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-      }
-    }
+.auth-form {
+  animation: formSlide 0.5s var(--transition-normal);
+}
 
-    select {
-      cursor: pointer;
-      background: white;
-    }
+@keyframes formSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
-    .field-hint {
-      display: block;
-      margin-top: 6px;
-      color: #718096;
-      font-size: 12px;
-      font-style: italic;
-    }
+.form-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 8px 0;
+  letter-spacing: 1px;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
+}
+
+.form-subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 28px 0;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+// ============================================================================
+// Glass Input Fields
+// ============================================================================
+
+.glass-input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-input {
+  width: 100%;
+  height: 52px;
+  padding: 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(14, 165, 233, 0.15);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: transparent;
   }
 
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(14, 165, 233, 0.3);
   }
 
-  .error-message {
-    background: #fed7d7;
-    color: #c53030;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 14px;
+  &:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-electric-blue);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
   }
 
-  .login-button {
-    width: 100%;
+  &:focus + .glass-label,
+  &:not(:placeholder-shown) + .glass-label {
+    transform: translateY(-32px) scale(0.85);
+    color: var(--color-electric-blue);
+    background: rgba(15, 23, 41, 0.95);
+    padding: 2px 8px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 480px) {
+    height: 48px;
     padding: 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    font-size: 16px; // Prevent iOS zoom
   }
 }
 
-.toggle-form {
-  margin-top: 16px;
-  text-align: center;
+.glass-label {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  transition: all var(--transition-normal);
+  transform-origin: left top;
 
-  p {
-    color: #718096;
-    font-size: 14px;
-    margin: 0;
+  @media (max-width: 480px) {
+    font-size: 15px;
+  }
+}
+
+.input-glow {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-electric-blue), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  pointer-events: none;
+
+  .glass-input:focus ~ & {
+    opacity: 1;
+    animation: inputGlowPulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes inputGlowPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+// ============================================================================
+// Error Banner
+// ============================================================================
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  color: #fca5a5;
+  font-size: 14px;
+  animation: errorSlide 0.3s var(--transition-normal);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+
+@keyframes errorSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================================================
+// Neon Button
+// ============================================================================
+
+.neon-button {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(135deg, var(--color-electric-blue), var(--color-cyan));
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  box-shadow:
+    0 0 20px rgba(14, 165, 233, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 30px rgba(14, 165, 233, 0.6),
+      0 6px 16px rgba(0, 0, 0, 0.4);
   }
 
-  .link-button {
-    background: none;
-    border: none;
-    color: #667eea;
-    cursor: pointer;
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 480px) {
+    height: 48px;
+  }
+}
+
+.button-text,
+.button-loading {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: 480px) {
     font-size: 14px;
-    font-weight: 600;
-    padding: 0;
+  }
+}
+
+.button-glow {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+
+  .neon-button:hover:not(:disabled) & {
+    left: 100%;
+  }
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================================================
+// Security Badge
+// ============================================================================
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 12px;
+  background: rgba(14, 165, 233, 0.05);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(14, 165, 233, 0.1);
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: var(--color-cyan);
+  }
+
+  span {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+// ============================================================================
+// Terms Text
+// ============================================================================
+
+.terms-text {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 24px 0 0 0;
+  line-height: 1.6;
+
+  a {
+    color: var(--color-cyan);
+    text-decoration: none;
+    transition: color var(--transition-fast);
 
     &:hover {
+      color: var(--color-neon-cyan);
       text-decoration: underline;
     }
   }
 }
 
-.production-notice {
-  margin-top: 24px;
-  padding: 16px;
-  background: #f0fdf4;
-  border: 1px solid #86efac;
-  border-radius: 8px;
-  text-align: center;
+// ============================================================================
+// Holographic Particles
+// ============================================================================
 
-  p {
-    margin: 4px 0;
-    font-size: 13px;
-    color: #166534;
+.holo-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
 
-    strong {
-      color: #15803d;
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--color-electric-blue);
+    border-radius: 50%;
+    box-shadow:
+      0 0 10px rgba(14, 165, 233, 0.8),
+      0 0 20px rgba(14, 165, 233, 0.4);
+    animation: particleFloat 15s ease-in-out infinite;
+
+    &:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      animation-delay: 0s;
     }
+
+    &:nth-child(2) {
+      top: 40%;
+      left: 80%;
+      animation-delay: -3s;
+      background: var(--color-cyan);
+    }
+
+    &:nth-child(3) {
+      top: 60%;
+      left: 30%;
+      animation-delay: -6s;
+    }
+
+    &:nth-child(4) {
+      top: 80%;
+      left: 70%;
+      animation-delay: -9s;
+      background: var(--color-neon-cyan);
+    }
+
+    &:nth-child(5) {
+      top: 30%;
+      left: 50%;
+      animation-delay: -12s;
+    }
+
+    &:nth-child(6) {
+      top: 70%;
+      left: 15%;
+      animation-delay: -15s;
+      background: var(--color-cyan);
+    }
+  }
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(100px, -100px) scale(1.5);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50px, 50px) scale(0.8);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(-100px, -80px) scale(1.2);
+    opacity: 0.5;
+  }
+}
+
+// ============================================================================
+// Utility Animations
+// ============================================================================
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ============================================================================
+// Accessibility & Reduced Motion
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
